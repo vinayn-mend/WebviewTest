@@ -20,6 +20,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const MEND_LOGOUT_URL = 'https://portal.mendfamily.com/logout';
 const MEND_PORTAL_DASHBOARD_URL = 'https://portal.mendfamily.com/dashboard';
 
+// This component will be rendered first
 function HomeScreen() {
   const navigation = useNavigation();
   return (
@@ -34,7 +35,9 @@ function HomeScreen() {
           justifyContent: 'center',
           alignItems: 'center',
         }}
+        //From here will be navigated to 'Visit Screen' component
         onPress={() => {
+          // This url is passed to Visit Screen. If needed to change the auth token change here
           navigation.navigate('Visit', {
             // Url with auth token attached
             url: 'https://portal.mendfamily.com/saml/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJQcm92aWRlciBBZG1pbiIsIm9yZyI6IjIxOTkiLCJzdWIiOiI0NzI1ODgzIiwianRpIjoiMmJkMjQ4M2UxMTc4M2RiZWVkMmMxN2EwMmNlYzIyZjVjMDc2ODA3NTQyZjgiLCJpYXQiOjE2NTI5MzU4ODUsIm5iZiI6MTY1MjkzNTg3NSwiZXhwIjoxNjUyOTQzMDg1LCJpc3MiOiJhcGkubWVuZGZhbWlseS5jb20ifQ.LpwAsSDuOcHnlh9dWitl_yjj7eeaVXYqx2nzDUTysVY7KX0EqDP-6ir-sWZT01ysOr_OnrqXNpZbHj7aP3hl1A?postLoginUrl=/video/VW53SB&orgIncluded=true&slim=true',
@@ -46,12 +49,13 @@ function HomeScreen() {
   );
 }
 
+// This will be rendered second
 function VisitScreen(props) {
   const navigation = useNavigation();
   const [loaded, setLoaded] = useState(false);
   const webViewRef = useRef();
   const isFocused = useIsFocused();
-  const [url, setUrl] = useState(props.route.params.url);
+  const [url, setUrl] = useState(props.route.params.url); //Url passed from HomeScreen will be fetched here and set to url state variable
   const [reloadCount, setCount] = useState(0);
 
   useEffect(() => {
@@ -118,7 +122,7 @@ function VisitScreen(props) {
         <WebView
           ref={webViewRef}
           // originWhitelist={['*']}
-          source={{uri: url}}
+          source={{uri: url}} // <--- That url is set here
           javaScriptEnabled={true}
           onLoadEnd={async syntheticEvent => {
             const {nativeEvent} = syntheticEvent;
